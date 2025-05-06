@@ -1,16 +1,31 @@
 import streamlit as st
-import joblib
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+import joblib
 
-# Load the model
-try:
-    model = joblib.load("model.pkl")
-except Exception as e:
-    st.error("❌ Failed to load the model. Please check if 'model.pkl' exists and is compatible.")
-    st.stop()
+@st.cache_resource
+def train_model():
+    # Dummy dataset (can replace with real data)
+    df = pd.DataFrame({
+        'Speed_Limit': [30, 50, 80, 60],
+        'Weather_Condition': [0, 1, 1, 0],
+        'Vehicle_Age': [5, 3, 10, 2],
+        'Accident_Severity': [0, 1, 2, 0]
+    })
+
+    X = df.drop('Accident_Severity', axis=1)
+    y = df['Accident_Severity']
+
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X, y)
+
+    return model
+
+# Train model (only once thanks to caching)
+model = train_model()
 
 # Title
-st.title("🚧 Traffic Accident Severity Predictor")
+st.title("🚧 Traffic Accident Severity Predictor (Trained on Host)")
 
 # Input widgets
 speed_limit = st.slider("Speed Limit (km/h)", min_value=0, max_value=120, value=50, step=5)

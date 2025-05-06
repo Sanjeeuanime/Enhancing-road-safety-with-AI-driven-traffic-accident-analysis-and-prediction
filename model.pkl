@@ -1,0 +1,16 @@
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+import pandas as pd
+import joblib
+
+# Example: Load and preprocess data
+df = pd.read_csv("sample_data.csv")
+X = df.drop("Accident_Severity", axis=1)
+y = df["Accident_Severity"]
+
+# Train a model
+model = RandomForestClassifier()
+model.fit(X, y)
+
+# Save the model
+joblib.dump(model, "model.pkl")
